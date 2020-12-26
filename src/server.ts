@@ -5,10 +5,10 @@ const app: express.Application = express();
 
 const PORT: any = process.env.PORT || 3000;
 
-const uri: string = 'mongodb://127.0.0.1:27017/local';
+const uri: string = 'mongodb://localhost/books';
 
 mongoose
-  .connect(uri, {
+  .connect(process.env.MONGODB_URI || uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   }, (err: any) => {

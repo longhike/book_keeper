@@ -4,9 +4,6 @@ import Book from '../models/books';
 const Router: express.Router = express.Router();
 
 Router
-    .get('/', (req, res) => {
-        console.log('hi!');
-    })
     .get('/books', async (req: express.Request, res: express.Response) => {
         try {
             const books = await Book.find({})
@@ -14,12 +11,19 @@ Router
                 console.log('no books yet');
             } else {
                 console.log(books);
+                res.json(books)
             }
         }
         catch (err) {
             console.log(err.message);
         }
 
+    })
+    .post('/books', (req: express.Request, res: express.Response) => {
+        let postObj = req.body
+        Book.create(postObj)
+        .then(response => res.json(response))
+        .catch(err => console.log(err.message))
     })
 
 

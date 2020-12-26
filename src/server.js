@@ -7,9 +7,9 @@ var express_1 = __importDefault(require("express"));
 var mongoose_1 = __importDefault(require("mongoose"));
 var app = express_1.default();
 var PORT = process.env.PORT || 3000;
-var uri = 'mongodb://127.0.0.1:27017/local';
+var uri = 'mongodb://localhost/books';
 mongoose_1.default
-    .connect(uri, {
+    .connect(process.env.MONGODB_URI || uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, function (err) {

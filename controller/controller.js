@@ -43,9 +43,6 @@ var express_1 = __importDefault(require("express"));
 var books_1 = __importDefault(require("../models/books"));
 var Router = express_1.default.Router();
 Router
-    .get('/', function (req, res) {
-    console.log('hi!');
-})
     .get('/books', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var books, err_1;
     return __generator(this, function (_a) {
@@ -60,6 +57,7 @@ Router
                 }
                 else {
                     console.log(books);
+                    res.json(books);
                 }
                 return [3 /*break*/, 3];
             case 2:
@@ -69,5 +67,11 @@ Router
             case 3: return [2 /*return*/];
         }
     });
-}); });
+}); })
+    .post('/books', function (req, res) {
+    var postObj = req.body;
+    books_1.default.create(postObj)
+        .then(function (response) { return res.json(response); })
+        .catch(function (err) { return console.log(err.message); });
+});
 exports.default = Router;
