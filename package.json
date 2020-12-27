@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/longhike/book_keeper#readme",
   "dependencies": {
+    "@types/mongoose": "^5.10.3",
     "express": "^4.17.1",
     "mongoose": "^5.11.8"
   },

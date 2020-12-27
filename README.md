@@ -8,4 +8,5 @@ The user will have the ability to delete books from that table.
 
 ## Stack
 Front end: HTML/CSS/JavaScript, compiled from TypeScript
+Back end: Node.js/Express.js, SQL (MySQL) (for now, Mongoose/MongoDB), GraphQL interface
 

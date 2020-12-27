@@ -39,25 +39,60 @@ var title = document.getElementById('title');
 var authorLast = document.getElementById('authorLast');
 var authorFirst = document.getElementById('authorFirst');
 var goButton = document.getElementById('go');
-getBooks()
-    .then(function (data) { return console.log(data); });
-goButton === null || goButton === void 0 ? void 0 : goButton.addEventListener('click', function () {
-    if (getFormData()) {
-        addbook(getFormData());
-        window.location.reload();
+var results = document.getElementById('results');
+// on load, 
+window.addEventListener('load', function (e) {
+    e.preventDefault();
+    getBooks()
+        .then(function (data) { return setResults(data); })
+        .catch(function (err) { return console.log(err.message); });
+});
+document.addEventListener('click', function (e) {
+    e.preventDefault();
+    var target = e.target;
+    if (target.id !== "" && target.id !== 'title' && target.id !== 'authorLast' && target.id !== 'authorFirst' && target.id !== 'go') {
+        tossBook(target.id);
+        getBooks()
+            .then(function (data) { return setResults(data); })
+            .catch(function (err) { return console.log(err.message); });
     }
 });
+goButton.addEventListener('click', function () {
+    if (getFormData() === undefined) {
+        alert('each field must have a value');
+        return;
+    }
+    else {
+        addBook(getFormData());
+        emptyFormDivs();
+        getBooks()
+            .then(function (data) { return setResults(data); })
+            .catch(function (err) { return console.log(err.message); });
+    }
+});
+function setResults(array) {
+    if (array) {
+        results.textContent = "";
+        results.innerHTML = "<table></table>";
+        array.map(function (book) {
+            results.innerHTML += "<li id=" + book._id + "><strong>Title: </strong>" + book.title + "; <strong>Author: </strong>" + book.authorLast + ", " + book.authorFirst + "</li>";
+        });
+    }
+}
 function getFormData() {
+    if (!title.value || !authorLast.value || !authorFirst.value) {
+        return;
+    }
     var formObj = {
-        'title': title.value,
-        'authorLast': authorLast.value,
-        'authorFirst': authorFirst.value
+        title: title.value.toString(),
+        authorLast: authorLast.value.toString(),
+        authorFirst: authorFirst.value.toString()
     };
     return formObj;
 }
 function getBooks() {
     return __awaiter(this, void 0, void 0, function () {
-        var find, res, resObj;
+        var find, res;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fetch('/books')];
@@ -66,15 +101,12 @@ function getBooks() {
                     return [4 /*yield*/, find.json()];
                 case 2:
                     res = _a.sent();
-                    return [4 /*yield*/, res];
-                case 3:
-                    resObj = _a.sent();
-                    return [2 /*return*/, resObj];
+                    return [2 /*return*/, res];
             }
         });
     });
 }
-function addbook(book) {
+function addBook(book) {
     if (!book) {
         return;
     }
@@ -89,4 +121,25 @@ function addbook(book) {
             .then(function (res) { return res.json(); })
             .then(function (data) { return console.log('data added: ', data); });
     }
+}
+function tossBook(id) {
+    if (!id) {
+        return;
+    }
+    else {
+        fetch('/books/delete' + id, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id })
+        })
+            .then(function (res) { return res.json(); })
+            .catch(function (err) { return console.log(err.message); });
+    }
+}
+function emptyFormDivs() {
+    title.value = '';
+    authorLast.value = '';
+    authorFirst.value = '';
 }

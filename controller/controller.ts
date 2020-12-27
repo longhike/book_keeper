@@ -10,7 +10,6 @@ Router
             if (!books) {
                 console.log('no books yet');
             } else {
-                console.log(books);
                 res.json(books)
             }
         }
@@ -25,6 +24,19 @@ Router
         .then(response => res.json(response))
         .catch(err => console.log(err.message))
     })
+    .post('/books/delete:id', (req: express.Request, res: express.Response) => {
+        let delStr = req.params.id;
+        Book.findOneAndRemove({ _id: delStr }, (err: Error) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log('successfully deleted');
+            }
+        })
+
+    }
+    )
 
 
 export default Router;

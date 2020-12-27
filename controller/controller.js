@@ -56,7 +56,6 @@ Router
                     console.log('no books yet');
                 }
                 else {
-                    console.log(books);
                     res.json(books);
                 }
                 return [3 /*break*/, 3];
@@ -73,5 +72,16 @@ Router
     books_1.default.create(postObj)
         .then(function (response) { return res.json(response); })
         .catch(function (err) { return console.log(err.message); });
+})
+    .post('/books/delete:id', function (req, res) {
+    var delStr = req.params.id;
+    books_1.default.findOneAndRemove({ _id: delStr }, function (err) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log('successfully deleted');
+        }
+    });
 });
 exports.default = Router;
