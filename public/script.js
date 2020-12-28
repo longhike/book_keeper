@@ -75,7 +75,7 @@ function setResults(array) {
         results.textContent = "";
         results.innerHTML = "<table></table>";
         array.map(function (book) {
-            results.innerHTML += "<li id=" + book._id + "><strong>Title: </strong>" + book.title + "; <strong>Author: </strong>" + book.authorLast + ", " + book.authorFirst + "</li>";
+            results.innerHTML += "<li id=" + book.id + "><strong>Title: </strong>" + book.title + "; <strong>Author: </strong>" + book.authorLast + ", " + book.authorFirst + "</li>";
         });
     }
 }

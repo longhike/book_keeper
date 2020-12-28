@@ -3,12 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = __importDefault(require("mongoose"));
-var Schema = mongoose_1.default.Schema;
-var BookSchema = new Schema({
-    title: String,
-    authorLast: String,
-    authorFirst: String
+var sequelize_1 = require("sequelize");
+var db_1 = __importDefault(require("../config/db"));
+var Book = db_1.default.define('books', {
+    title: {
+        type: sequelize_1.STRING
+    },
+    authorLast: {
+        type: sequelize_1.STRING
+    },
+    authorFirst: {
+        type: sequelize_1.STRING
+    }
 });
-var Book = mongoose_1.default.model("Book", BookSchema);
 exports.default = Book;
