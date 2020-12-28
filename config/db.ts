@@ -1,7 +1,6 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
 
-
 dotenv.config()
 const password: string | undefined = process.env.MYSQL_PASSWORD;
 
