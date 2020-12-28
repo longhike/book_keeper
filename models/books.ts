@@ -1,13 +1,18 @@
-import mongoose from 'mongoose';
+import { Sequelize, STRING } from 'sequelize';
+import db from '../config/db';
 
-const Schema = mongoose.Schema;
 
-const BookSchema = new Schema({
-    title: String,
-    authorLast: String,
-    authorFirst: String
+const Book = db.define('books', {
+    title: {
+        type: STRING
+    },
+    authorLast: {
+        type: STRING
+    },
+    authorFirst: {
+        type: STRING
+    }
+
 })
 
-const Book = mongoose.model("Book", BookSchema)
-
-export default Book
+export default Book;

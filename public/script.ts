@@ -5,7 +5,7 @@ type BookData = {
 };
 
 type ResultsData = {
-    _id: string;
+    id: string;
     title: string;
     authorLast: string;
     authorFirst: string;
@@ -54,7 +54,7 @@ function setResults(array: Array<ResultsData>): void {
         results.textContent = ""
         results.innerHTML = "<table></table>"
         array.map(book => {
-            results.innerHTML += `<li id=${book._id}><strong>Title: </strong>${book.title}; <strong>Author: </strong>${book.authorLast}, ${book.authorFirst}</li>`
+            results.innerHTML += `<li id=${book.id}><strong>Title: </strong>${book.title}; <strong>Author: </strong>${book.authorLast}, ${book.authorFirst}</li>`
         })
     }
 }

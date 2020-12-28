@@ -40,16 +40,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var books_1 = __importDefault(require("../models/books"));
+var Books_1 = __importDefault(require("../models/Books"));
 var Router = express_1.default.Router();
 Router
-    .get('/books', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    .get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var books, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, books_1.default.find({})];
+                return [4 /*yield*/, Books_1.default.findAll()];
             case 1:
                 books = _a.sent();
                 if (!books) {
@@ -67,15 +67,20 @@ Router
         }
     });
 }); })
-    .post('/books', function (req, res) {
+    .post('/', function (req, res) {
     var postObj = req.body;
-    books_1.default.create(postObj)
+    Books_1.default.create(postObj)
         .then(function (response) { return res.json(response); })
         .catch(function (err) { return console.log(err.message); });
 })
-    .post('/books/delete:id', function (req, res) {
+    .post('/delete:id', function (req, res) {
     var delStr = req.params.id;
-    books_1.default.findOneAndRemove({ _id: delStr }, function (err) {
+    Books_1.default.destroy({
+        where: {
+            id: delStr
+        }
+    })
+        .then(function (err) {
         if (err) {
             console.log(err);
         }
