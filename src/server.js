@@ -20,7 +20,7 @@ app.use('/graphql', express_graphql_1.graphqlHTTP({
     graphiql: true,
 }));
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use(express_1.default.static('public'));
+app.use(express_1.default.static('views'));
 app.use(express_1.default.json());
 var controller_1 = __importDefault(require("../controller/controller"));
 app.use('/books', controller_1.default);
