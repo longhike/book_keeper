@@ -71,7 +71,7 @@ const Query = new GraphQLObjectType({
 
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
-    description: 'add books',
+    description: 'add books, delete book by id',
     fields() {
         return {
             addBook: {

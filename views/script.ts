@@ -1,14 +1,14 @@
 type BookData = {
-    title: string;
-    authorLast: string;
-    authorFirst: string;
+    title: String;
+    authorLast: String;
+    authorFirst: String;
 };
 
 type ResultsData = {
-    id: string;
-    title: string;
-    authorLast: string;
-    authorFirst: string;
+    id: String;
+    title: String;
+    authorLast: String;
+    authorFirst: String;
 };
 
 const title = <HTMLInputElement>document.getElementById('title')
@@ -35,7 +35,7 @@ document.addEventListener('click', (e: Event) => {
     }
 })
 
-goButton.addEventListener('click', () => {
+goButton.addEventListener('click', async () => {
     if (getFormData() === undefined) {
         alert('each field must have a value')
         return;
@@ -43,13 +43,14 @@ goButton.addEventListener('click', () => {
     else {
         addBook(getFormData()!)
         emptyFormDivs()
-        getBooks()
+        await getBooks()
         .then(data => setResults(data))
         .catch(err => console.log(err.message))
     }
 })
 
 function setResults(array: Array<ResultsData>): void {
+    console.log(array);
     if (array) {
         results.textContent = ""
         results.innerHTML = "<table></table>"
@@ -59,7 +60,7 @@ function setResults(array: Array<ResultsData>): void {
     }
 }
 
-function getFormData(): BookData | undefined{
+function getFormData(): BookData | undefined {
     if (!title.value || !authorLast.value || !authorFirst.value) {
         return;
     } 
@@ -71,10 +72,27 @@ function getFormData(): BookData | undefined{
     return formObj;
 }
 
-async function getBooks(): Promise<any> {
-    const find = await fetch('/books')
-    const res: Array<BookData> = await find.json()
-    return res;
+async function getBooks(): Promise<ResultsData[]> {
+    const find = await fetch('/graphql', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            query: `
+              query {
+                books {
+                  id
+                  title
+                  authorLast
+                  authorFirst
+                }
+              }
+            `
+        })
+    })
+    const res = await find.json();
+    return res.data.books;
 }
 
 function addBook(book: BookData): void | undefined {
@@ -82,15 +100,33 @@ function addBook(book: BookData): void | undefined {
         return;
     }
     else {
-        fetch('/books', {
+        console.log(book);
+        var mutation = `
+            mutation Mutation($title: String, $authorLast: String, $authorFirst: String){
+                addBook(title: $title, authorLast: $authorLast, authorFirst: $authorFirst) {
+                    id
+                    title
+                    authorLast
+                    authorFirst
+                }    
+            }
+        `
+        fetch('/graphql', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(book)
+            body: JSON.stringify({
+                query: mutation,
+                variables: {
+                    title:book.title,
+                    authorLast:book.authorLast,
+                    authorFirst: book.authorFirst}
+            })
         })
         .then(res => res.json())
         .then(data => console.log('data added: ', data))
+        .catch(err => console.log(err.message))
     }
 }
 

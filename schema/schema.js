@@ -67,7 +67,7 @@ var Query = new graphql_1.GraphQLObjectType({
 });
 var Mutation = new graphql_1.GraphQLObjectType({
     name: 'Mutation',
-    description: 'add books',
+    description: 'add books, delete book by id',
     fields: function () {
         return {
             addBook: {

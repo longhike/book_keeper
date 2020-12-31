@@ -57,20 +57,28 @@ document.addEventListener('click', function (e) {
             .catch(function (err) { return console.log(err.message); });
     }
 });
-goButton.addEventListener('click', function () {
-    if (getFormData() === undefined) {
-        alert('each field must have a value');
-        return;
-    }
-    else {
-        addBook(getFormData());
-        emptyFormDivs();
-        getBooks()
-            .then(function (data) { return setResults(data); })
-            .catch(function (err) { return console.log(err.message); });
-    }
-});
+goButton.addEventListener('click', function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(getFormData() === undefined)) return [3 /*break*/, 1];
+                alert('each field must have a value');
+                return [2 /*return*/];
+            case 1:
+                addBook(getFormData());
+                emptyFormDivs();
+                return [4 /*yield*/, getBooks()
+                        .then(function (data) { return setResults(data); })
+                        .catch(function (err) { return console.log(err.message); })];
+            case 2:
+                _a.sent();
+                _a.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 function setResults(array) {
+    console.log(array);
     if (array) {
         results.textContent = "";
         results.innerHTML = "<table></table>";
@@ -95,13 +103,21 @@ function getBooks() {
         var find, res;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch('/books')];
+                case 0: return [4 /*yield*/, fetch('/graphql', {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            query: "\n              query {\n                books {\n                  id\n                  title\n                  authorLast\n                  authorFirst\n                }\n              }\n            "
+                        })
+                    })];
                 case 1:
                     find = _a.sent();
                     return [4 /*yield*/, find.json()];
                 case 2:
                     res = _a.sent();
-                    return [2 /*return*/, res];
+                    return [2 /*return*/, res.data.books];
             }
         });
     });
@@ -111,15 +127,25 @@ function addBook(book) {
         return;
     }
     else {
-        fetch('/books', {
+        console.log(book);
+        var mutation = "\n            mutation Mutation($title: String, $authorLast: String, $authorFirst: String){\n                addBook(title: $title, authorLast: $authorLast, authorFirst: $authorFirst) {\n                    id\n                    title\n                    authorLast\n                    authorFirst\n                }    \n            }\n        ";
+        fetch('/graphql', {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(book)
+            body: JSON.stringify({
+                query: mutation,
+                variables: {
+                    title: book.title,
+                    authorLast: book.authorLast,
+                    authorFirst: book.authorFirst
+                }
+            })
         })
             .then(function (res) { return res.json(); })
-            .then(function (data) { return console.log('data added: ', data); });
+            .then(function (data) { return console.log('data added: ', data); })
+            .catch(function (err) { return console.log(err.message); });
     }
 }
 function tossBook(id) {
